@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 const SPARK_COLORS = ['#f5c842', '#f4a080', '#a8c8e8', '#ffffff', '#e88a50'];
 
@@ -33,8 +33,12 @@ export default function MagicOverlay({ onRef }) {
     }, 1800);
   }, []);
 
-  // Expose fire() to parent
-  if (onRef) onRef(fire);
+  useEffect(() => {
+    if (onRef) onRef(fire);
+    return () => {
+      if (onRef) onRef(null);
+    };
+  }, [onRef, fire]);
 
   return <div className="magic-overlay" ref={containerRef} />;
 }
